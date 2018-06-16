@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { UserInfoService } from './user-info.service';
+import { Router } from '@angular/router';
+
 
 export class User{
   email:string="";
@@ -19,7 +21,7 @@ export class User{
               class="form-control"
               id="name"
               formControlName="name">
-        <div *ngIf="!myForm.controls['userData'].controls['name'].valid">
+        <div *ngIf="!myForm.controls['userData']['controls']['name'].valid">
               Required
         </div>
       </div>
@@ -29,7 +31,7 @@ export class User{
              class="form-control"
              id="email"
              formControlName="email">
-      <div *ngIf="!myForm.controls['userData'].controls['email'].valid">
+      <div *ngIf="!myForm.controls['userData']['controls']['email'].valid">
         Required
       </div>
     </div>
@@ -43,7 +45,7 @@ export class User{
                   cols="8"
                   rows="4">
         </textarea>
-        <div *ngIf="!myForm.controls['userData'].controls['post'].valid">
+        <div *ngIf="!myForm.controls['userData']['controls']['post'].valid">
           Minimum length 10
         </div>
     </div>
@@ -51,7 +53,9 @@ export class User{
 
     <button type="submit" class="btn btn-primary" [disabled]="!myForm.valid">Submit</button>
     <button type="button" class="btn btn-default" (click)="onGetData()">Get Data</button>
-  </form>
+    <router-outlet></router-outlet>
+
+    </form>
   `,
   styles: []
 })
@@ -59,7 +63,9 @@ export class FormComponent {
 
   userInfo:User=new User();
   myForm: FormGroup;
-  constructor(private formBuilder: FormBuilder, private userInfoService: UserInfoService) { 
+  constructor(private formBuilder: FormBuilder, 
+    private userInfoService: UserInfoService, 
+    private router: Router) { 
     this.myForm=formBuilder.group({
       'userData':formBuilder.group({
         'name':['', [Validators.required]],
@@ -92,5 +98,7 @@ export class FormComponent {
   onSubmit() {
     console.log('Reactive Form Data: ');
     console.log(this.myForm.value);
+    
+    this.router.navigateByUrl('/success');
   }
 }
